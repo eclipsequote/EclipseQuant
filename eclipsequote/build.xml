@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="EclipseQuote" default="dist">
+   <property name="eclipse.home" location="../../"/>
+   <property name="plugin.name" value="com.xclu.eclipsequote_0.0.2"/>
+
+   <path id="build.class.path">
+		<fileset dir="${eclipse.home}/plugins" includes="org.eclipse*/**/*.jar"/>
+    </path>
+
+
+ 	<target name="init">
+	<delete includeEmptyDirs="true" quiet="true">
+            <fileset dir="dist"/>
+            <fileset dir="build"/>
+	</delete>
+ 	<mkdir dir="build"/>
+ 	<mkdir dir="dist"/>
+ 	<mkdir dir="build/${plugin.name}"/>
+ 	</target>
+  <target name="compile" depends="init">
+      <pathconvert refid="build.class.path" property="compile.converted" pathsep=" "/>
+        <echo>${compile.converted}</echo>
+  	<javac destdir="build" srcdir="src" classpathref="build.class.path"></javac>
+  	
+  </target>
+  <target name="dist" depends="compile">
+  	<jar destfile="build/${plugin.name}/${plugin.name}.jar">
+		<fileset dir="build" includes="**/*.class"/>
+  	</jar>
+	<delete includeEmptyDirs="true" quiet="true">
+            <fileset dir="build/com"/>
+	</delete>
+ 	<mkdir dir="build/${plugin.name}/icons"/>
+  		<copy todir="build/${plugin.name}/icons"><fileset dir="icons"/></copy>
+  		<copy file="plugin.xml" todir="build/${plugin.name}"></copy>
+  		<copy file="CPLv1.0.htm" todir="build/${plugin.name}"></copy>
+  		<copy file="readme.txt" todir="build/${plugin.name}"></copy>
+  		<zip destfile="build/${plugin.name}/${plugin.name}-src.zip"><fileset dir=".">
+				<exclude name="build/**"/>
+				<exclude name="dist/**"/></fileset></zip>
+  		<zip destfile="dist/${plugin.name}.zip"><fileset dir="build"></fileset></zip>
+  </target>
+</project>
